@@ -13,9 +13,25 @@ app.use(
 );
 app.use(express.json());
 
-// Basic test route
+// Root route
+app.get("/", (req, res) => {
+  res.json({ message: "Squash Marker API is running" });
+});
+
+// Test route
 app.get("/api/test", (req, res) => {
   res.json({ message: "Backend is working!" });
+});
+
+// 404 handler
+app.use((req, res) => {
+  res.status(404).json({ error: "Route not found" });
+});
+
+// Error handler
+app.use((err, req, res, next) => {
+  console.error(err.stack);
+  res.status(500).json({ error: "Something broke!" });
 });
 
 // Start server
