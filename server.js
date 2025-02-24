@@ -3,6 +3,10 @@ const mongoose = require("mongoose");
 const cors = require("cors");
 require("dotenv").config();
 
+// Import models
+const Match = require("./models/Match");
+const Event = require("./models/Event");
+
 const app = express();
 
 // Middleware
@@ -13,9 +17,67 @@ app.use(
 );
 app.use(express.json());
 
+// Connect to MongoDB
+mongoose
+  .connect(process.env.MONGODB_URI)
+  .then(() => console.log("Connected to MongoDB"))
+  .catch((err) => console.error("Could not connect to MongoDB:", err));
+
 // Root route
 app.get("/", (req, res) => {
   res.json({ message: "Squash Marker API is running" });
+});
+
+// Match routes
+app.post("/api/matches", async (req, res) => {
+  try {
+    const match = new Match(req.body);
+    await match.save();
+    res.status(201).json(match);
+  } catch (error) {
+    res.status(400).json({ error: error.message });
+  }
+});
+
+app.get("/api/matches", async (req, res) => {
+  try {
+    const matches = await Match.find().sort({ date: -1 });
+    res.json(matches);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+app.get("/api/matches/:id", async (req, res) => {
+  try {
+    const match = await Match.findById(req.params.id);
+    if (!match) {
+      return res.status(404).json({ error: "Match not found" });
+    }
+    res.json(match);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+// Event routes
+app.post("/api/events", async (req, res) => {
+  try {
+    const event = new Event(req.body);
+    await event.save();
+    res.status(201).json(event);
+  } catch (error) {
+    res.status(400).json({ error: error.message });
+  }
+});
+
+app.get("/api/events", async (req, res) => {
+  try {
+    const events = await Event.find().sort({ date: -1 });
+    res.json(events);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
 });
 
 // Test route
