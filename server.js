@@ -12,7 +12,29 @@ const app = express();
 // Middleware
 app.use(
   cors({
-    origin: process.env.CORS_ORIGIN || "http://localhost:3000",
+    origin: function (origin, callback) {
+      // Parse the CORS_ORIGIN environment variable
+      const allowedOrigins = (
+        process.env.CORS_ORIGIN || "http://localhost:3000"
+      )
+        .split(",")
+        .map((o) => o.trim());
+
+      console.log("CORS request from origin:", origin);
+      console.log("Allowed origins:", allowedOrigins);
+
+      // Allow requests with no origin (like mobile apps or curl requests)
+      if (!origin) return callback(null, true);
+
+      if (allowedOrigins.indexOf(origin) !== -1) {
+        // Return the specific matching origin, not the entire list
+        return callback(null, origin);
+      }
+
+      callback(new Error("Not allowed by CORS"));
+    },
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    credentials: true,
   })
 );
 app.use(express.json());
