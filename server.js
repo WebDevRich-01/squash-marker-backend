@@ -20,9 +20,6 @@ app.use(
         .split(",")
         .map((o) => o.trim());
 
-      console.log("CORS request from origin:", origin);
-      console.log("Allowed origins:", allowedOrigins);
-
       // Allow requests with no origin (like mobile apps or curl requests)
       if (!origin) return callback(null, true);
 
