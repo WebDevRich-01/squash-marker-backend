@@ -16,8 +16,10 @@ const matchSchema = new mongoose.Schema({
     pointsToWin: { type: Number, required: true },
     clearPoints: { type: Number, required: true },
     bestOf: { type: Number, required: true },
+    player1Serving: Boolean,
   },
   eventId: { type: mongoose.Schema.Types.ObjectId, ref: "Event" },
+  eventName: String,
 });
 
 module.exports = mongoose.model("Match", matchSchema);
