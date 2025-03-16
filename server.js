@@ -79,6 +79,19 @@ app.get("/api/matches/:id", async (req, res) => {
   }
 });
 
+// Add this DELETE route for matches
+app.delete("/api/matches/:id", async (req, res) => {
+  try {
+    const match = await Match.findByIdAndDelete(req.params.id);
+    if (!match) {
+      return res.status(404).json({ error: "Match not found" });
+    }
+    res.json({ success: true, message: "Match deleted successfully" });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
 // Event routes
 app.post("/api/events", async (req, res) => {
   try {
@@ -94,6 +107,19 @@ app.get("/api/events", async (req, res) => {
   try {
     const events = await Event.find().sort({ date: -1 });
     res.json(events);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+// Add this DELETE route for events
+app.delete("/api/matches/:id", async (req, res) => {
+  try {
+    const event = await Event.findByIdAndDelete(req.params.id);
+    if (!event) {
+      return res.status(404).json({ error: "Event not found" });
+    }
+    res.json({ success: true, message: "Event deleted successfully" });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
