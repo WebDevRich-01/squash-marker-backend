@@ -93,7 +93,7 @@ app.delete("/api/matches/:id", async (req, res) => {
 });
 
 // Add this route to delete all matches
-app.delete("/api/matches/all", async (req, res) => {
+app.delete("/api/matches", async (req, res) => {
   try {
     const result = await Match.deleteMany({});
     res.json({
@@ -140,7 +140,7 @@ app.delete("/api/events/:id", async (req, res) => {
 });
 
 // Add this route to delete all events
-app.delete("/api/events/all", async (req, res) => {
+app.delete("/api/events", async (req, res) => {
   try {
     const result = await Event.deleteMany({});
     res.json({
